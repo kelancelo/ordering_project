@@ -1,0 +1,52 @@
+{% extends "ordering_app/layout.html" %}
+
+{% block title %}Selected Products{% endblock %}
+
+{% block body %}
+<h2 class="mb-3">Selected Products</h2>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Add-ons</th>
+                <th scope="col">Product Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in selected_products %}
+            <tr>
+                <td>{{ product.product.name }}</th>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.product.price }} Php</td>
+                <td>
+                    {% if product.add_ons.all %}
+                    <ul>
+                        {% for add_on in product.add_ons.all %}
+                        <li>{{ add_on.name }} @ {{ add_on.price }} Php</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    No add-ons.
+                    {% endif %}
+                </td>
+                <td>{{ product.product_total }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No selected products.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if selected_products %}
+<div>
+    <h5><b>Total Items:</b> {{ total_items }}</h5>
+    <h5><b>Total Price:</b> {{ total_price }} Php</h5>
+    <a href="{% url 'ordering_app:checkout' %}" class="btn btn-primary mt-3">Checkout</a>
+</div>
+{% endif %}
+{% endblock %}

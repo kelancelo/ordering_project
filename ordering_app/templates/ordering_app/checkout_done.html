@@ -1,0 +1,45 @@
+{% extends "ordering_app/layout.html" %}
+
+{% block title %}Checkout Done{% endblock %}
+
+{% block body %}
+<h2 class="mb-3">Order Slip</h2>
+<div><b>Order ID:</b> {{ order.id }}</div>
+<div><b>Queue number:</b> {{ order.queue_number }}</div>
+<div><b>Kiosk:</b> {{ order.kiosk.name }}</div>
+<div class="mb-3"><b>Date:</b> {{ order.date_ordered }}</div>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Add-ons</th>
+                <th scope="col">Product Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in order_products %}
+            <tr>
+                <td>{{ product.product.name }}</th>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.product.price }} Php</td>
+                <td>
+                    <ul>
+                        {% for add_on in product.add_ons.all %}
+                        <li>{{ add_on.name }} @ {{ add_on.price }} Php</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>{{ product.product_total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h5><b>Total Items:</b> {{ total_items }}</h5>
+    <h5><b>Total Price:</b> {{ total_price }} Php</h5>
+</div>
+{% endblock %}

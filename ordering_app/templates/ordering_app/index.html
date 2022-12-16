@@ -1,0 +1,91 @@
+{% extends "ordering_app/layout.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block body %}
+<h2 class="mb-3">Products</h2>
+<div class="row g-4">
+    {% for product in products %}
+    <div class="col-md-12 col-lg-6 d-flex justify-content-center">
+        <div class="card w-100">
+            <div class="row g-0 h-100">
+                <div class="col-md-5 align-self-center d-flex justify-content-center p-3">
+                    <img src="{{ product.image_url }}" class="img-fluid rounded-start card-listing-img" alt="...">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body h-100 d-flex flex-column">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">Price: {{ product.price }} Php</p>
+                        <button class="btn btn-primary mt-auto add-to-order-btn" style="width: max-content;"
+                            data-product-id="{{ product.id }}" data-bs-toggle="modal"
+                            data-bs-target="#select-add-on-modal">
+                            Add to order
+
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="select-add-on-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Add to order</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form 
+                    action="{% url 'ordering_app:add_to_order' %}" 
+                    id="order-form" 
+                    method="post" 
+                    class="d-flex flex-column align-items-center"
+                >
+                    {% csrf_token %}
+                    <div>
+                        <p class="fs-5 text-center">Quantity</p>
+                        <input 
+                            type="number" 
+                            name="quantity" 
+                            id="quantity" 
+                            class="form-control" 
+                            value="1" 
+                            min="1"
+                            style="width: max-content; text-align: center;"
+                        >
+
+                    </div>
+                    <div>
+                        <p class="fs-5 mt-3 w-100 text-center">Select add-ons</p>
+                        {% for add_on in add_ons %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="add_on_id" value="{{ add_on.id }}"
+                                id="{{ add_on.id}}">
+                            <label class="form-check-label" for="{{ add_on.id }}">
+                                {{ add_on.name }} | {{ add_on.price }} Php
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="product_id" id="product-id-input">
+                    <input type="submit" value="Ok" class="btn btn-primary mt-3">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    addToOrderBtns = document.querySelectorAll(".add-to-order-btn")
+    for (let btn of addToOrderBtns) {
+        btn.onclick = () => {
+            document.querySelector("#product-id-input").setAttribute("value", btn.dataset.productId)
+        }
+    }
+</script>
+{% endblock %}

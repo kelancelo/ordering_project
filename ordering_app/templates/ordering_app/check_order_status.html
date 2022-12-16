@@ -1,0 +1,14 @@
+{% extends "ordering_app/layout.html "%}
+
+{% block title %}Check Order Status{% endblock %}
+
+{% block body %}
+<div class="container text-center" style="max-width: 576px;">
+    <h1 class="mb-3">Check Order Status</h1>
+    <form action="{% url 'ordering_app:check_order_status' %}">
+        <input type="text" name="order_id" id="" class="form-control mb-3" placeholder="Enter order id...">
+        <input type="submit" value="Check" class="btn btn-primary">
+    </form>
+
+</div>
+{% endblock %}
